@@ -42,3 +42,35 @@ if button_clicked:
     with center_col:
         fig1
         fig2
+
+remote_job_filter = st.sidebar.selectbox('Jobs Available', df.job_title.unique())
+remote_year_filter = st.sidebar.multiselect('Choose Year', df.work_year.unique())
+
+remote_button_clicked = st.sidebar.button('Display')
+
+if remote_button_clicked:
+    remote_filtered_job = df[
+        (df['job_title'] == remote_job_filter) &
+        (df['work_year'].isin(remote_year_filter))
+    ]
+
+    remote_job_per_year = remote_filtered_job.groupby(['work_year', 'remote_ratio'], as_index = False)['job_title'].value_counts()
+    combined_counts = remote_filtered_job.groupby(['work_year', 'remote_ratio', 'job_title']).size().reset_index(name='count').groupby(['remote_ratio', 'job_title'])['count'].sum()
+
+
+    filtered_data = remote_filtered_job[['work_year', 'remote_ratio']]
+
+    grouped_data = filtered_data.groupby(['work_year', 'remote_ratio']).size().reset_index(name='count')
+
+    fig3 = px.bar(grouped_data, x='work_year', y='count', color='remote_ratio', barmode='stack')
+
+    fig3.update_layout(
+        xaxis_title='Work Year',
+        yaxis_title='Counts',
+        title='Histogram of Remote Ratio by Work Year'
+    )
+
+    with center_col:
+        fig3
+        st.table(combined_counts)
+
