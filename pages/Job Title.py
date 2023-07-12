@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 
-st.set_page_config(page_title='Experience Level', layout = 'wide', page_icon=':bar_chart')
+st.set_page_config(page_title='Job Title', layout = 'wide', page_icon=':bar_chart')
 
 st.title(':red[Average Salary] :blue[Based On Job Titles]')
 
@@ -13,6 +14,9 @@ df = st.session_state['df']
 
 # SideBars
 st.sidebar.header('Filter Section')
+
+st.sidebar.markdown('## Salary Of Job Titles Every Year')
+
 
 job_filter = st.sidebar.multiselect('Jobs Available', df.job_title.unique())
 year_filter = st.sidebar.selectbox('Choose Year', df.work_year.unique())
@@ -43,6 +47,9 @@ if button_clicked:
         fig1
         fig2
 
+
+st.sidebar.markdown('## Remote Ratio For Each Jobs Every Year')
+
 remote_job_filter = st.sidebar.selectbox('Jobs Available', df.job_title.unique())
 remote_year_filter = st.sidebar.multiselect('Choose Year', df.work_year.unique())
 
@@ -54,10 +61,6 @@ if remote_button_clicked:
         (df['work_year'].isin(remote_year_filter))
     ]
 
-    remote_job_per_year = remote_filtered_job.groupby(['work_year', 'remote_ratio'], as_index = False)['job_title'].value_counts()
-    combined_counts = remote_filtered_job.groupby(['work_year', 'remote_ratio', 'job_title']).size().reset_index(name='count').groupby(['remote_ratio', 'job_title'])['count'].sum()
-
-
     filtered_data = remote_filtered_job[['work_year', 'remote_ratio']]
 
     grouped_data = filtered_data.groupby(['work_year', 'remote_ratio']).size().reset_index(name='count')
@@ -67,10 +70,9 @@ if remote_button_clicked:
     fig3.update_layout(
         xaxis_title='Work Year',
         yaxis_title='Counts',
-        title='Histogram of Remote Ratio by Work Year'
+        title='Bar of Remote Ratio by Work Year'
     )
 
     with center_col:
         fig3
-        st.table(combined_counts)
 
