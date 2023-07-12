@@ -1,22 +1,15 @@
 import streamlit as st
 import pandas as pd
-from datetime import datetime
 import plotly.express as px
 
-csv_file = 'data/data_science_salary.csv'
+st.set_page_config(page_title='Experience Level', layout = 'wide', page_icon=':bar_chart')
 
-st.set_page_config(page_title='Advanced Visualization', layout = 'wide', page_icon=':bar_chart')
+st.title(':red[Average Salary] :blue[Based On Job Titles]')
 
-st.title(':red[Data Science] :blue[Salary Visualization]🤖', )
+left_col, center_col, right_col = st.columns([1, 2, 1])
 
-left_col, right_col = st.columns([1, 3])
 
-@st.cache_data
-def convert_csv_to_df(file_path):
-    return pd.read_csv(file_path, index_col = 0)  
-
-df = convert_csv_to_df(csv_file)
-st.dataframe(df)
+df = st.session_state['df']
 
 # SideBars
 st.sidebar.header('Filter Section')
@@ -38,4 +31,14 @@ if button_clicked:
         title = f'Average Salary Per Job Title for Year {year_filter}'
     )
 
-    left_col.plotly_chart(fig1)
+
+    job_title_by_year = filtered_job.groupby('work_year', as_index = False)['job_title'].value_counts()
+    fig2 = px.pie(data_frame = job_title_by_year, names='job_title', values = 'count')
+
+    fig2.update_layout(
+        title = f'Job Title Count in {year_filter}'
+    )
+
+    with center_col:
+        fig1
+        fig2
