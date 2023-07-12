@@ -10,7 +10,7 @@ left_col, center_col, right_col = st.columns([1, 2, 1])
 
 df = st.session_state['df']
 
-st.sidebar.header('Filter Section')
+st.sidebar.header('Experience Level Visualizations')
 
 experience_filter = st.sidebar.multiselect('Experience Levels', df.experience_level.unique())
 year_filter = st.sidebar.selectbox('Choose Year', df.work_year.unique())
