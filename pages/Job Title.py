@@ -17,7 +17,7 @@ st.sidebar.header('Job Title Visualizations')
 
 
 def job_title_avg_sal_per_yr():
-    job_filter = st.sidebar.multiselect('Jobs Available', df.job_title.unique())
+    job_filter = st.sidebar.multiselect('Job Available', df.job_title.unique())
     year_filter = st.sidebar.selectbox('Choose Year', df.work_year.unique())
 
     button_clicked = st.sidebar.button('Display Chart')
@@ -72,7 +72,7 @@ def job_distribution_per_year():
 
 
 def remote_ratio_for_jobs_per_yr():
-    remote_job_filter = st.sidebar.selectbox('Jobs Available', df.job_title.unique())
+    remote_job_filter = st.sidebar.selectbox('Available Jobs', df.job_title.unique())
     remote_year_filter = st.sidebar.multiselect('Choose Year', df.work_year.unique())
 
     remote_button_clicked = st.sidebar.button('Display')
